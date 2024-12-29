@@ -32,21 +32,17 @@ pipeline
                 }
             }
             steps{
-                /*
                 sh '''
-
                 test -f build/index.html
                 npm test
                 '''
-                */
-        sh 'echo "Hi"'
-        sh 'echo "hello'
+     
             }
         }
     }
     post{
         always{
-            junit 'test-result/junit.xml'
+           // junit 'test-result/junit.xml'
         }
     }
 }
