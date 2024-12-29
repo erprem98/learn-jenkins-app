@@ -39,7 +39,7 @@ pipeline
                 npm test
                 '''
                 */
-           echo "Hi"'
+           'echo "Hi"'
             }
         }
     }
