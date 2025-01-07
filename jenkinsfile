@@ -59,6 +59,7 @@ pipeline {
 
                     steps {
                         sh '''
+                        echo 'small change'
                             npm install serve
                             node_modules/.bin/serve -s build &
                             sleep 10
@@ -84,6 +85,7 @@ pipeline {
             steps {
                 //node_modules/.bin/netlify deploy --dir=build --prod
                 sh '''
+
                npm install netlify-cli
               node_modules/.bin/netlify --version
               echo "Deploying to production.. site ID : $NETLIFY_SITE_ID"
