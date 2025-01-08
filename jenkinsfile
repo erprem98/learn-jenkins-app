@@ -1,12 +1,10 @@
 pipeline {
     agent any
-
-    environment {
-        NETLIFY_SITE_ID = '3ae2ead7-22a3-4066-97d8-ca55a4dc0f08'
-        NETLIFY_AUTH_TOKEN = credentials('nfp_QT88Ro8MyHqbd1j5N1Q2NLP6CMYgrRuxed90')
-    }
-
+         environment{
+         NETLIFY_SITE_ID='3ae2ead7-22a3-4066-97d8-ca55a4dc0f08'
+         }
     stages {
+
 
         stage('Build') {
             agent {
@@ -26,6 +24,7 @@ pipeline {
                 '''
             }
         }
+        
 
         stage('Tests') {
             parallel {
@@ -43,11 +42,11 @@ pipeline {
                             npm test
                         '''
                     }
-                    post {
-                        always {
-                            junit 'jest-results/junit.xml'
-                        }
-                    }
+                    // post {
+                    //     always {
+                    //         junit 'jest-results/junit.xml'
+                    //     }
+                    // }
                 }
 
                 stage('E2E') {
@@ -60,6 +59,7 @@ pipeline {
 
                     steps {
                         sh '''
+                        echo 'small change'
                             npm install serve
                             node_modules/.bin/serve -s build &
                             sleep 10
@@ -67,16 +67,15 @@ pipeline {
                         '''
                     }
 
-                    post {
-                        always {
-                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright Local', reportTitles: '', useWrapperFileDirectly: true])
-                        }
-                    }
+                    // post {
+                    //     always {
+                    //         publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                    //     }
+                    // }
                 }
             }
         }
-
-        stage('Deploy') {
+                stage('Deploy') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -84,38 +83,15 @@ pipeline {
                 }
             }
             steps {
+                //node_modules/.bin/netlify deploy --dir=build --prod
                 sh '''
-                    npm install netlify-cli
-                    node_modules/.bin/netlify --version
-                    echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
-                    node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --prod
+
+               npm install netlify-cli
+              node_modules/.bin/netlify --version
+              echo "Deploying to production.. site ID : $NETLIFY_SITE_ID"
+              node_modules/.bin/netlify status
+              
                 '''
-            }
-        }
-
-        stage('Prod E2E') {
-            agent {
-                docker {
-                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-                    reuseNode true
-                }
-            }
-
-            environment {
-                CI_ENVIRONMENT_URL = 'PUT YOUR NETLIFY SITE URL HERE'
-            }
-
-            steps {
-                sh '''
-                    npx playwright test  --reporter=html
-                '''
-            }
-
-            post {
-                always {
-                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright E2E', reportTitles: '', useWrapperFileDirectly: true])
-                }
             }
         }
     }
