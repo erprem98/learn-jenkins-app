@@ -78,17 +78,17 @@ pipeline {
                 }
             }
         }
-        stage('Approval')
-        {
-            steps{
-                timeout(15) {
-                 // some block
-                 input message: 'Do you wish to deploy in Production?', ok: 'Yes, I am sure'
-}
-                
-            }
-        }
+        // stage('Approval')
+        // {
+        //     steps{
+        //         timeout(15) 
+        //         {
+        //       input message: 'Do you wish to deploy in Production?', ok: 'Yes, I am sure'
+        //       }   
+        //     }}
+             
 
+        
         stage('Deploy')
                  {
             agent {
