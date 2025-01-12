@@ -4,6 +4,21 @@ pipeline {
          NETLIFY_SITE_ID='3ae2ead7-22a3-4066-97d8-ca55a4dc0f08'
          }
     stages {
+        stage('AWS')
+        {
+         agent{
+            docker{
+                image 'amazon/aws-cli'
+                args "--entrypoint=''"
+            }
+         }
+         steps{
+            sh '''
+            aws --version
+        
+            '''
+         }
+        }
 
         stage('Build') {
             agent {
