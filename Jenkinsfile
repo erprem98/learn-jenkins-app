@@ -1,33 +1,25 @@
 pipeline{
     agent any
-    // docker{
-    //     image 'maven:3.8.1-jdk-11'
-    // }
+  
     stages{
        stage('Build'){
-        steps{
-            echo "Building an application"
+        agent{
+            docker{
+                image 'node:18-alpine'
+                reuseNode true
+            }
         }
-       }
-       stage('Test'){
         steps{
-            echo "Testing an application"
-        }
-       } 
-       stage('Deploy'){
-        steps{
-            echo "Deploying an application"
-        }
+         sh '''
+         ls -la
+         node --version
+         npm --version
+         npm ci
+         npm run build
+         ls -la
+
+           '''
+           }
        }
     }
-    // post{
-    //     always{
-    //         echo "Cleaning up"
-    //     },
-    //     success{
-    //         echo "This will run only if successful"
-    //     },
-    //     failure{
-    //         echo "This will run only if failed"
-    // }
 }
