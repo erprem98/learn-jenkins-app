@@ -14,6 +14,11 @@ pipeline{
             echo "Testing an application"
         }
        } 
+       stage('Deploy'){
+        steps{
+            echo "Deploying an application"
+        }
+       }
     }
     // post{
     //     always{
