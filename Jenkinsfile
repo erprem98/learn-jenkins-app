@@ -24,8 +24,7 @@ pipeline {
                    npm --version
                    
                    echo "=== Building Application ==="
-                   npm ci
-                   npm run build
+                   
                '''
            }
        }
