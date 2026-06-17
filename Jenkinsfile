@@ -1,24 +1,32 @@
-pipeline{
+pipeline {
     agent any
+    
+    // 1. ADD THIS GLOBAL TOOLS BLOCK
+    tools {
+        dockerTool 'my-docker' 
+    }
   
-    stages{
-       stage('Build'){
-        agent{
-            docker{
-                image 'node:18-alpine'
-                reuseNode true
-            }
-        }
-        steps{
-         sh '''
-         ls -la
-         node --version
-         npm --version
-         npm ci
-         npm run build
-         ls -la
-
-           '''
+    stages {
+       stage('Build') {
+           agent {
+               docker {
+                   image 'node:18-alpine'
+                   reuseNode true
+               }
+           }
+           steps {
+               sh '''
+                   echo "=== Project Files ==="
+                   ls -la
+                   
+                   echo "=== Environment Versions ==="
+                   node --version
+                   npm --version
+                   
+                   echo "=== Building Application ==="
+                   npm ci
+                   npm run build
+               '''
            }
        }
     }
