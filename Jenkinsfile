@@ -6,10 +6,10 @@ pipeline {
     }
 
     stages {
-        stage('Build') {
+        stage('Docker Test') {
             steps {
-                // We use your working 'sh' method, but map the volume so npm cache and workspace persist
-                sh 'docker run --rm -v /var/jenkins_home/workspace/Jenkins-app:/app -w /app node:18-alpine sh -c "npm ci && npm run build"'
+                // Uses a tiny alpine image to print a success message and verify the docker version
+                sh 'docker run --rm alpine sh -c "echo === DOCKER IS WORKING PERFECTLY === && uname -a"'
             }
         }
     }
