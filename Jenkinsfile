@@ -1,25 +1,16 @@
 pipeline {
     agent any
     
-    // 1. Force Jenkins to register 'my-docker' before any stage executes
     tools {
         dockerTool 'my-docker' 
     }
 
     stages {
-       stage('Build') {
-           agent {
-               docker {
-                   image 'node:18-alpine'
-                   // 2. Shares the workspace between the host and the container
-                   reuseNode true
-               }
-           }
-           steps {
-               sh '''
-                echo "Building the application..."
-               '''
-           }
-       }
+        stage('Build') {
+            steps {
+                // We use your working 'sh' method, but map the volume so npm cache and workspace persist
+                sh 'docker run --rm -v /var/jenkins_home/workspace/Jenkins-app:/app -w /app node:18-alpine sh -c "npm ci && npm run build"'
+            }
+        }
     }
 }
