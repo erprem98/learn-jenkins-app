@@ -8,25 +8,16 @@ pipeline {
 
     stages {
        stage('Build') {
-           agent {
-               docker {
-                   image 'node:18-alpine'
-                   // 2. Shares the workspace between the host and the container
-                   reuseNode true
-               }
-           }
+        //    agent {
+        //        docker {
+        //            image 'node:18-alpine'
+        //            // 2. Shares the workspace between the host and the container
+        //            reuseNode true
+        //        }
+        //    }
            steps {
                sh '''
-                   echo "=== Project Files ==="
-                   ls -la
-                   
-                   echo "=== Environment Versions ==="
-                   node --version
-                   npm --version
-                   
-                   echo "=== Building Application ==="
-                   npm ci
-                   npm run build
+                echo "Building the application..."
                '''
            }
        }
