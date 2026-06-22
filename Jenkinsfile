@@ -27,6 +27,7 @@ pipeline {
             agent{
                 docker{
                     image 'amazon/aws-cli'
+                    reuseNode true
                     args "--entrypoint=''"
                 }
             }
@@ -34,8 +35,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'aws -cred', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                 sh '''
                 aws --version
-                echo "Hi" > index.html
-                aws s3 cp index.html s3://jenkins-app23433/index.html
+
                 aws s3 sync . s3://jenkins-app23433
                  
                 '''}
